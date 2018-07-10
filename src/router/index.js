@@ -71,6 +71,42 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/courseManagement',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'courseManagement',
+        component: () => import('@/views/courseManagement/index'),
+        meta: { title: '课程管理', icon: 'from' }
+      }
+    ]
+  },
+  {
+    path: '/studentManagement',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'studentManagement',
+        component: () => import('@/views/studentManagement/index'),
+        meta: { title: '学生管理', icon: 'from' }
+      }
+    ]
+  },
+  {
+    path: '/teacherManagement',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'teacherManagement',
+        component: () => import('@/views/teacherManagement/index'),
+        meta: { title: '教师管理', icon: 'from' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
