@@ -38,40 +38,6 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
-  {
     path: '/courseManagement',
     component: Layout,
     children: [
@@ -79,7 +45,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'courseManagement',
         component: () => import('@/views/courseManagement/index'),
-        meta: { title: '课程管理', icon: 'from' }
+        meta: { title: '课程管理', icon: 'course' }
       }
     ]
   },
@@ -91,7 +57,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'studentManagement',
         component: () => import('@/views/studentManagement/index'),
-        meta: { title: '学生管理', icon: 'from' }
+        meta: { title: '学生管理', icon: 'stu' }
       }
     ]
   },
@@ -103,7 +69,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'teacherManagement',
         component: () => import('@/views/teacherManagement/index'),
-        meta: { title: '教师管理', icon: 'from' }
+        meta: { title: '教师管理', icon: 'tea' }
       }
     ]
   },
