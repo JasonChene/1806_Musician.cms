@@ -1,10 +1,10 @@
 <template>
   <div class="layout">
     <el-form :inline="true" :model="ruleForm" v-bind:rules="ruleForms" ref="ruleForm" class="demo-form-inline">
-      <el-form-item >
-        <el-input v-model="ruleForm.user" placeholder="姓名"></el-input>
+      <el-form-item prop="username">
+        <el-input v-model="ruleForm.username" placeholder="姓名"></el-input>
       </el-form-item>
-      <el-form-item >
+      <el-form-item prop="phone">
         <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
       </el-form-item >
       <el-form-item>
@@ -18,6 +18,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmitByQuery">查询</el-button>
+        <el-button type="primary" @click="onSubmitByQueryAll">显示所有</el-button>
       </el-form-item>
     </el-form>
 
