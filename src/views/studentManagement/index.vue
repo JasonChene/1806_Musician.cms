@@ -1,55 +1,52 @@
 <template>
   <div class="layout">
-    <el-form :inline="true" :model="ruleForm" v-bind:rules="rules" class="demo-form-inline">
-      <el-form-item >
-        <el-input v-model="ruleForm.user" placeholder="姓名"></el-input>
+    <el-form :inline="true" :model="ruleForm" ref="ruleForm" :rules="ruleForms" class="demo-form-inline">
+      <el-form-item prop="username" >
+        <el-input name="username" v-model="ruleForm.username" placeholder="姓名"></el-input>
       </el-form-item>
-      <el-form-item >
-        <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
+      <el-form-item prop="phone" >
+        <el-input name="phone" v-model="ruleForm.phone" placeholder="手机号"></el-input>
       </el-form-item >
       <el-form-item>
-        <el-button type="primary" @click="onSubmitByAdd">添加</el-button>
+        <el-button type="primary" @click.native.prevent="onSubmitByAdd">添加</el-button>
       </el-form-item>
     </el-form>
 
-    <el-form :inline="true" :model="ruleForm" v-bind:rules="rules" class="demo-form-inline">
+    <el-form :inline="true" :model="ruleFormPhone" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
+        <el-input v-model="ruleFormPhone.phone" placeholder="手机号"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmitByAdd">查询</el-button>
+        <el-button type="primary" @click="onSubmitByQuery">查询</el-button>
       </el-form-item>
     </el-form>
 
     <el-table
       :data="tableData"
+      v-loading="dataListLoading"
       style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
-      </el-table-column>
       <el-table-column
         prop="name"
         label="姓名"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="地址">
+        prop="phone"
+        label="手机">
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
+import { addUser } from '@/api/user'
 export default {
   data() {
     // 验证名字
     const validatorName = function(rule, value, callback) {
       if (!value) {
         callback(new Error('请输入账号'))
-      } else if (!/^[A-Za-z0-9_\-\u4e00-\u9fa5]+$/.test(value) || value.length > 0) {
+      } else if (!(/^[A-Za-z0-9_\-\u4e00-\u9fa5]+$/.test(value) || value.length > 0)) {
         callback(new Error('姓名不能为空且只能是中英文或者数字'))
       } else {
         callback()
@@ -67,42 +64,61 @@ export default {
     }
     return {
       ruleForm: {
-        name: '',
+        username: '',
+        phone: '',
+        type: 'student'
+      },
+      ruleFormPhone: {
         phone: ''
       },
-      formInline: {
-        user: '',
-        region: ''
-      },
-      rules: {
-        name: [
-          { validator: validatorName, trigger: 'blur' }
+      dataListLoading: false,
+      ruleForms: {
+        username: [
+          { required: true, validator: validatorName, trigger: 'blur' }
         ],
-        password: [
-          { validator: validatorPhone, trigger: 'blur' }
+        phone: [
+          { required: true, validator: validatorPhone, trigger: 'blur' }
         ]
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      tableData: []
     }
   },
+  mounted() {
+    this.getDataList()
+  },
   methods: {
+    // 获取数据列表
+    getDataList() {
+      this.dataListLoading = true
+      this.$store.dispatch('getDataList', 'student').then(res => {
+        this.dataListLoading = false
+        this.tableData = res
+      }).catch(err => {
+        this.dataListLoading = false
+        console.log(err)
+      })
+    },
     onSubmit() {
+      console.log('submit!')
+    },
+    onSubmitByAdd() {
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          addUser(this.ruleForm).then((res) => {
+            this.loading = false
+          }, err => {
+            console.log(err)
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    onSubmitByQuery() {
       console.log('submit!')
     }
   }
