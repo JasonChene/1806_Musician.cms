@@ -40,7 +40,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item>
-            <el-button class="queryByPhone" type="primary" @click="onSubmitByAdd">查询</el-button>
+            <el-button class="queryByPhone" type="primary" @click="queryByTeacher">查询</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -54,7 +54,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item>
-            <el-button class="queryByPhone" type="primary" @click="onSubmitByAdd">查询</el-button>
+            <el-button class="queryByPhone" type="primary" @click="queryByStudent">查询</el-button>
           </el-form-item>
         </el-col>
       </el-row>

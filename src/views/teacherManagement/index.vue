@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <el-form :inline="true" :model="ruleForm" v-bind:rules="rules" class="demo-form-inline">
+    <el-form :inline="true" :model="ruleForm" v-bind:rules="ruleForms" ref="ruleForm" class="demo-form-inline">
       <el-form-item >
         <el-input v-model="ruleForm.user" placeholder="姓名"></el-input>
       </el-form-item>
@@ -8,41 +8,38 @@
         <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
       </el-form-item >
       <el-form-item>
-        <el-button type="primary" @click="onSubmitByAdd">添加</el-button>
+        <el-button type="primary" @click.native.prevent="onSubmitByAdd">添加</el-button>
       </el-form-item>
     </el-form>
 
-    <el-form :inline="true" :model="ruleForm" v-bind:rules="rules" class="demo-form-inline">
+    <el-form :inline="true" :model="ruleFormByQuery" v-bind:rules="ruleFormsByQuery" ref="ruleFormByQuery" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
+        <el-input v-model="ruleFormByQuery.phone" placeholder="手机号"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmitByAdd">查询</el-button>
+        <el-button type="primary" @click="onSubmitByQuery">查询</el-button>
       </el-form-item>
     </el-form>
 
     <el-table
       :data="tableData"
+      v-loading="dataListLoading"
       style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
-      </el-table-column>
       <el-table-column
         prop="name"
         label="姓名"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="地址">
+        prop="phone"
+        label="手机">
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
+import { addUser } from '@/api/user'
 export default {
   data() {
     // 验证名字
@@ -67,43 +64,76 @@ export default {
     }
     return {
       ruleForm: {
-        name: '',
+        username: '',
+        phone: '',
+        type: 'teacher'
+      },
+      ruleFormByQuery: {
         phone: ''
       },
-      formInline: {
-        user: '',
-        region: ''
-      },
-      rules: {
-        name: [
-          { validator: validatorName, trigger: 'blur' }
+      dataListLoading: false,
+      ruleForms: {
+        username: [
+          { required: true, validator: validatorName, trigger: 'blur' }
         ],
-        password: [
-          { validator: validatorPhone, trigger: 'blur' }
+        phone: [
+          { required: true, validator: validatorPhone, trigger: 'blur' }
         ]
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      ruleFormsByQuery: {
+        phone: [
+          { required: true, validator: validatorPhone, trigger: 'blur' }
+        ]
+      },
+      tableData: []
     }
   },
+  mounted() {
+    this.getDataList()
+  },
   methods: {
+    // 获取数据列表
+    getDataList() {
+      const phone = this.ruleFormByQuery.phone
+      this.dataListLoading = true
+      this.$store.dispatch('getDataList', 'teacher#' + phone).then(res => {
+        this.dataListLoading = false
+        this.tableData = res
+      }).catch(err => {
+        this.dataListLoading = false
+        console.log(err)
+      })
+    },
     onSubmit() {
       console.log('submit!')
+    },
+    onSubmitByAdd() {
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          addUser(this.ruleForm).then((res) => {
+            this.loading = false
+          }, err => {
+            console.log(err)
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    onSubmitByQuery() {
+      this.$refs.ruleFormByQuery.validate(valid => {
+        if (valid) {
+          this.getDataList()
+        }
+      })
+    },
+    onSubmitByQueryAll() {
+      this.ruleFormByQuery.phone = ''
+      this.getDataList()
     }
   }
 }

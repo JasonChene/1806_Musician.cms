@@ -12,12 +12,13 @@
       </el-form-item>
     </el-form>
 
-    <el-form :inline="true" :model="ruleFormPhone" class="demo-form-inline">
-      <el-form-item>
-        <el-input v-model="ruleFormPhone.phone" placeholder="手机号"></el-input>
+    <el-form :inline="true" :model="ruleFormByQuery" ref="ruleFormByQuery" :rules="ruleFormsByQuery" class="demo-form-inline">
+      <el-form-item prop="phone">
+        <el-input v-model="ruleFormByQuery.phone" placeholder="手机号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmitByQuery">查询</el-button>
+        <el-button type="primary" @click="onSubmitByQueryAll">显示所有</el-button>
       </el-form-item>
     </el-form>
 
@@ -68,7 +69,7 @@ export default {
         phone: '',
         type: 'student'
       },
-      ruleFormPhone: {
+      ruleFormByQuery: {
         phone: ''
       },
       dataListLoading: false,
@@ -80,6 +81,12 @@ export default {
           { required: true, validator: validatorPhone, trigger: 'blur' }
         ]
       },
+      ruleFormsByQuery: {
+        phone: [
+          { required: true, validator: validatorPhone, trigger: 'blur' }
+        ]
+      },
+
       tableData: []
     }
   },
@@ -89,8 +96,9 @@ export default {
   methods: {
     // 获取数据列表
     getDataList() {
+      const phone = this.ruleFormByQuery.phone
       this.dataListLoading = true
-      this.$store.dispatch('getDataList', 'student').then(res => {
+      this.$store.dispatch('getDataList', 'student#' + phone).then(res => {
         this.dataListLoading = false
         this.tableData = res
       }).catch(err => {
@@ -119,7 +127,15 @@ export default {
       })
     },
     onSubmitByQuery() {
-      console.log('submit!')
+      this.$refs.ruleFormByQuery.validate(valid => {
+        if (valid) {
+          this.getDataList()
+        }
+      })
+    },
+    onSubmitByQueryAll() {
+      this.ruleFormByQuery.phone = ''
+      this.getDataList()
     }
   }
 }
