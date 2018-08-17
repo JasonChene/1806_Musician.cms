@@ -8,7 +8,7 @@
         <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
       </el-form-item >
       <el-form-item>
-        <el-button type="primary" @click.native.prevent="onSubmitByAdd">添加</el-button>
+        <el-button type="primary" @click.native.prevent="onSubmitByAdd" @refreshDataList="getDataList">添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -47,7 +47,7 @@ export default {
     const validatorName = function(rule, value, callback) {
       if (!value) {
         callback(new Error('请输入账号'))
-      } else if (!/^[A-Za-z0-9_\-\u4e00-\u9fa5]+$/.test(value) || value.length > 0) {
+      } else if (!(/^[A-Za-z0-9_\-\u4e00-\u9fa5]+$/.test(value) || value.length > 0)) {
         callback(new Error('姓名不能为空且只能是中英文或者数字'))
       } else {
         callback()
@@ -114,6 +114,7 @@ export default {
           this.loading = true
           addUser(this.ruleForm).then((res) => {
             this.loading = false
+            this.$router.go({ path: '/teacherManagement' })
           }, err => {
             console.log(err)
           }).catch(() => {
@@ -128,7 +129,9 @@ export default {
     onSubmitByQuery() {
       this.$refs.ruleFormByQuery.validate(valid => {
         if (valid) {
-          this.getDataList()
+          this.getDataList().then(res => {
+            this.$emit('refreshDataList')
+          })
         }
       })
     },

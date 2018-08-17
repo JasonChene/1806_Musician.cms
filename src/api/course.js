@@ -18,7 +18,6 @@ export function getDataList(type) {
     // userList 就是拥有该角色权限的所有用户了。
     const dataList = []
     const dataListByQuery = []
-    console.log(userList, '角色信息表')
     userList.map(item => {
       const dataItem = {}
       const typeResult = item.attributes

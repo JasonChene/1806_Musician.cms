@@ -101,6 +101,7 @@ export default {
       this.$store.dispatch('getDataList', 'student#' + phone).then(res => {
         this.dataListLoading = false
         this.tableData = res
+        console.log(res, '列表数据')
       }).catch(err => {
         this.dataListLoading = false
         console.log(err)
@@ -115,6 +116,7 @@ export default {
           this.loading = true
           addUser(this.ruleForm).then((res) => {
             this.loading = false
+            this.$router.go({ path: '/studentManagement' })
           }, err => {
             console.log(err)
           }).catch(() => {
