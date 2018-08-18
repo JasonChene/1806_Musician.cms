@@ -1,7 +1,7 @@
 import { Message } from 'element-ui'
 import AV from 'leancloud-storage'
 
-import request from '@/utils/request'
+// import request from '@/utils/request'
 
 // let User = AV.Object.extend('User')
 const query = new AV.Query('_User')
@@ -50,8 +50,9 @@ export function getInfo(token) {
 }
 
 export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
-  })
+  return AV.User.logOut()
+  // return request({
+  //   url: '/user/logout',
+  //   method: 'post'
+  // })
 }

@@ -5,7 +5,7 @@ export function addUser(userInfo) {
   const username = userInfo.username
   const phone = userInfo.phone
   const type = userInfo.type
-
+  console.log('res', userInfo.toString())
   const user = new AV.User()
   user.setUsername(username)
   user.setPassword('123456')
@@ -17,7 +17,10 @@ export function addUser(userInfo) {
       userId: loggedInUser.id,
       role: type // 如果是学生则为'student'
     }
+    console.log()
     AV.Cloud.run('setRole', options).then(res => {
+      console.log('tag', '=======')
+      console.log('res', res.toString())
       if (res.status) {
         Message({
           message: '用户添加成功',

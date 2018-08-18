@@ -114,9 +114,12 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.loading = true
+          console.log('=======ruleForm========')
+          console.log(this.ruleForm)
           addUser(this.ruleForm).then((res) => {
             this.loading = false
-            this.$router.go({ path: '/studentManagement' })
+            console.log('===============')
+            // this.$router.go({ path: '/studentManagement' })
           }, err => {
             console.log(err)
           }).catch(() => {
