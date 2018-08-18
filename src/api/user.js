@@ -5,23 +5,18 @@ export function addUser(userInfo) {
   const username = userInfo.username
   const phone = userInfo.phone
   const type = userInfo.type
-  console.log('res', userInfo.toString())
   const user = new AV.User()
-  user.setUsername(username)
-  user.setPassword('123456')
-  user.setMobilePhoneNumber(phone)
+  user.set('username', username)
+  user.set('password', '123456')
+  user.set('mobilePhoneNumber', phone)
   return user.save().then(function(loggedInUser) {
-    console.log(loggedInUser.id, '返回用户注册之后的信息')
-    console.log(AV.User.current(), '当前用户')
     var options = {
       userId: loggedInUser.id,
       role: type // 如果是学生则为'student'
     }
-    console.log()
     AV.Cloud.run('setRole', options).then(res => {
-      console.log('tag', '=======')
-      console.log('res', res.toString())
-      if (res.status) {
+      if (res.status === 200) {
+        console.log()
         Message({
           message: '用户添加成功',
           type: 'success',
@@ -39,11 +34,19 @@ export function addUser(userInfo) {
     })
     return loggedInUser
   }, function(error) {
-    Message({
-      message: '未知错误请联系管理员',
-      type: 'error',
-      duration: 3 * 1000
-    })
+    if (error.toString().indexOf('Mobile phone number has already been taken')) {
+      Message({
+        message: '手机号已被占用',
+        type: 'error',
+        duration: 3 * 1000
+      })
+    } else {
+      Message({
+        message: '未知错误请联系管理员',
+        type: 'error',
+        duration: 3 * 1000
+      })
+    }
     return error
   }).catch(error => {
     return error
