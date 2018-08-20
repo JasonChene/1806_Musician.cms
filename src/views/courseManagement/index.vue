@@ -60,13 +60,53 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-button type="primary" @click="addCourse" round>添加该课程</el-button>
     </el-form>
+    <el-table
+      :data="tableData"
+      v-loading="dataListLoading"
+      style="width: 100%">
+      <el-table-column
+        prop="course_name"
+        label="课程名"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="teacher_name"
+        label="老师姓名"width="180">
+      </el-table-column>
+      <el-table-column
+        prop="teacher_number"
+        label="老师手机号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="student_name"
+        label="学生姓名"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="student_number"
+        label="学生手机号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="start_time"
+        label="开始时间"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="duration_time"
+        label="课程时长"
+        width="180">
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
+  import AV from 'leancloud-storage'
   import { getDataList, addCourse } from '@/api/course'
   export default {
     data() {
@@ -81,6 +121,7 @@
         }
       }
       return {
+        tableData: [],
         ruleForm: {
           comment: '',
           startTime: '',
@@ -120,6 +161,9 @@
         }
       }
     },
+    mounted() {
+      this.get_course_list_teacher()
+    },
     methods: {
       onSubmit() {
         console.log('submit!')
@@ -155,7 +199,34 @@
         }).catch(error => {
           console.log(error)
         })
+      },
+
+      get_course_list_teacher() {
+
+        var self=this
+        var course_list = []
+        const query = new AV.Query('Course')
+        query.greaterThanOrEqualTo('duration', 0)
+        query.include('student',"teacher")
+        query.find().then(function (results) {
+            results.forEach(function (result) {
+              var one_course_info={}
+            one_course_info.course_name=(result._serverData).name
+            one_course_info.duration_time=((result._serverData).duration)/60000+"分钟"
+            one_course_info.start_time= (result._serverData).startTime.toLocaleString()
+            one_course_info.teacher_name=(((result._serverData).teacher).attributes).username
+            one_course_info.teacher_number=(((result._serverData).teacher).attributes).mobilePhoneNumber
+            one_course_info.student_name=(((result._serverData).student).attributes).username
+            one_course_info.student_number=(((result._serverData).student).attributes).mobilePhoneNumber
+              course_list.push(one_course_info)
+            })
+            self.tableData=course_list
+          },
+          function (error) {
+          })
+
       }
+
     }
   }
 </script>
@@ -163,7 +234,7 @@
 <style scoped>
 .layout {
   padding: 20px 20px;
-  margin-right: 30%;
+  margin-right: 10%;
 }
 /* 设置时间宽度 */
 .el-date-editor--datetimerange.el-input__inner {
