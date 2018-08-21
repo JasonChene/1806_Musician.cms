@@ -62,44 +62,48 @@
       </el-row>
 
       <el-button type="primary" @click="addCourse" round>添加该课程</el-button>
+      <el-button type="primary" @click="deleteCourse" round>删除该课程</el-button>
+
     </el-form>
     <el-table
       :data="tableData"
       v-loading="dataListLoading"
+      height="800"
       style="width: 100%">
       <el-table-column
         prop="course_name"
         label="课程名"
-        width="180">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="teacher_name"
-        label="老师姓名"width="180">
+        label="老师姓名"
+        width="200">
       </el-table-column>
       <el-table-column
         prop="teacher_number"
         label="老师手机号"
-        width="180">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="student_name"
         label="学生姓名"
-        width="180">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="student_number"
         label="学生手机号"
-        width="180">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="start_time"
         label="开始时间"
-        width="180">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="duration_time"
         label="课程时长"
-        width="180">
+        width="200">
       </el-table-column>
     </el-table>
   </div>
@@ -107,7 +111,7 @@
 
 <script>
   import AV from 'leancloud-storage'
-  import { getDataList, addCourse } from '@/api/course'
+  import { getDataList, addCourse ,deleteCourse} from '@/api/course'
   export default {
     data() {
       // 验证手机号
@@ -139,6 +143,7 @@
           }
         },
         ruleType: '',
+        dataListLoading: false,
         options: [{
           value: 1000 * 60 * 30,
           label: '30分钟'
@@ -200,6 +205,15 @@
           console.log(error)
         })
       },
+      deleteCourse() {
+        deleteCourse(this.ruleForm).then(res => {
+          console.log(res)
+        }, err => {
+          console.log(err)
+        }).catch(error => {
+          console.log(error)
+        })
+      },
 
       get_course_list_teacher() {
 
@@ -224,7 +238,6 @@
           },
           function (error) {
           })
-
       }
 
     }
