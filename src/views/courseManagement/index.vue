@@ -4,8 +4,8 @@
     <el-form :model="ruleForm" ref="ruleForm" :rules="ruleForms" class="demo-form-inline">
       <el-row>
         <el-col :span="12">
-            <el-form-item prop="comment">
-                <el-input v-model="ruleForm.comment" placeholder="课程名"></el-input>
+            <el-form-item prop="name">
+                <el-input v-model="ruleForm.name" placeholder="课程名"></el-input>
             </el-form-item>
         </el-col>
       </el-row>
@@ -123,7 +123,7 @@
       return {
         tableData: [],
         ruleForm: {
-          comment: '',
+          name: '',
           startTime: '',
           stuPhone: '',
           teaPhone: '',

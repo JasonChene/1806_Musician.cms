@@ -58,7 +58,7 @@ export function addCourse(data) {
   course.set('teacher', teacher)
   course.set('student', student)
   course.set('duration', data.duration)
-  course.set('comment', data.comment)
+  course.set('name', data.name)
 
   course.save().then(res => {
     Message({
