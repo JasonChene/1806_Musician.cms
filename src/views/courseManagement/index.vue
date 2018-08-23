@@ -111,7 +111,7 @@
 
 <script>
   import AV from 'leancloud-storage'
-  import { getDataList, addCourse ,deleteCourse} from '@/api/course'
+  import { getDataList,addCourse,deleteCourse} from '@/api/course'
   export default {
     data() {
       // 验证手机号
@@ -197,26 +197,32 @@
         }
       },
       addCourse() {
-        addCourse(this.ruleForm).then(res => {
-          console.log(res)
-        }, err => {
-          console.log(err)
-        }).catch(error => {
-          console.log(error)
-        })
+        var self = this
+        addCourse(this.ruleForm)
+        setTimeout(self.get_course_list_teacher,1000)
+        // .then(res => {
+        //   console.log(res)
+        //   setTimeout(console.log("444444"),5000)
+        // }, err => {
+        //   console.log(err)
+        // }).catch(error => {
+        //   console.log(error)
+        // })
       },
       deleteCourse() {
-        deleteCourse(this.ruleForm).then(res => {
-          console.log(res)
-        }, err => {
-          console.log(err)
-        }).catch(error => {
-          console.log(error)
-        })
+        var self = this
+        deleteCourse(this.ruleForm)
+          // .then(res => {
+        //   console.log(res)
+        // }, err => {
+        //   console.log(err)
+        // }).catch(error => {
+        //   console.log(error)
+        // })
+        setTimeout(self.get_course_list_teacher,1000)
       },
 
       get_course_list_teacher() {
-
         var self=this
         var course_list = []
         const query = new AV.Query('Course')
@@ -235,6 +241,7 @@
               course_list.push(one_course_info)
             })
             self.tableData=course_list
+          console.log(course_list)
           },
           function (error) {
           })

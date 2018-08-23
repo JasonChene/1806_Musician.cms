@@ -111,22 +111,28 @@ export default {
       console.log('submit!')
     },
     onSubmitByAdd() {
+      var self = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.loading = true
           addUser(this.ruleForm).then((res) => {
             this.loading = false
-            // this.$router.go({ path: '/studentManagement' })
+            // self.getDataList()
+              // this.$router.go({ path: '/studentManagement' })
           }, err => {
             console.log(err)
           }).catch(() => {
             this.loading = false
           })
+
         } else {
           console.log('error submit!!')
           return false
         }
       })
+      setTimeout(self.getDataList(),5000)
+      setTimeout(console.log("a"),5000)
+
     },
     onSubmitByQuery() {
       this.$refs.ruleFormByQuery.validate(valid => {

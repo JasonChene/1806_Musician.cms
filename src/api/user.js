@@ -15,6 +15,7 @@ export function addUser(userInfo) {
       role: type // 如果是学生则为'student'
     }
     AV.Cloud.run('setRole', options).then(res => {
+      console.log(res.status)
       if (res.status === 200) {
         console.log()
         Message({

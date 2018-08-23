@@ -109,12 +109,14 @@ export default {
       console.log('submit!')
     },
     onSubmitByAdd() {
+      var self  =this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.loading = true
           addUser(this.ruleForm).then((res) => {
             this.loading = false
-            this.$router.go({ path: '/teacherManagement' })
+            setTimeout(self.getDataList(),3000)
+            // this.$router.go({ path: '/teacherManagement' })
           }, err => {
             console.log(err)
           }).catch(() => {

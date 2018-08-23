@@ -112,9 +112,8 @@ export function deleteCourse(data) {
           type: 'error',
           duration: 3 * 1000
         })
-      });
+      })
     })
   console.log(results)
-
   })
 }
