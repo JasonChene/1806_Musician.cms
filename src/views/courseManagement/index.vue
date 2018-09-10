@@ -1,4 +1,3 @@
-
 <template>
   <div class="layout">
     <el-form :model="ruleForm" ref="ruleForm" :rules="ruleForms" class="demo-form-inline">
@@ -69,7 +68,7 @@
       :data="tableData"
       v-loading="dataListLoading"
       height="800"
-      style="width: 100%">
+      style="width:100%">
       <el-table-column
         prop="course_name"
         label="课程名"
@@ -212,7 +211,7 @@
       deleteCourse() {
         var self = this
         deleteCourse(this.ruleForm)
-          // .then(res => {
+        // .then(res => {
         //   console.log(res)
         // }, err => {
         //   console.log(err)
@@ -228,9 +227,9 @@
         const query = new AV.Query('Course')
         query.greaterThanOrEqualTo('duration', 0)
         query.include('student',"teacher")
-        query.find().then(function (results) {
-            results.forEach(function (result) {
-              var one_course_info={}
+        query.find().then(function(results) {
+          results.forEach(function(result) {
+            var one_course_info={}
             one_course_info.course_name=(result._serverData).name
             one_course_info.duration_time=((result._serverData).duration)/60000+"分钟"
             one_course_info.start_time= (result._serverData).startTime.toLocaleString()
@@ -238,9 +237,9 @@
             one_course_info.teacher_number=(((result._serverData).teacher).attributes).mobilePhoneNumber
             one_course_info.student_name=(((result._serverData).student).attributes).username
             one_course_info.student_number=(((result._serverData).student).attributes).mobilePhoneNumber
-              course_list.push(one_course_info)
-            })
-            self.tableData=course_list
+            course_list.push(one_course_info)
+          })
+          self.tableData=course_list
           console.log(course_list)
           },
           function (error) {

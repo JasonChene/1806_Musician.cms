@@ -14,7 +14,7 @@
 
     <el-form :inline="true" :model="ruleFormByQuery" ref="ruleFormByQuery" :rules="ruleFormsByQuery" class="demo-form-inline">
       <el-form-item prop="phone">
-        <el-input v-model="ruleFormByQuery.phone" placeholder="手机号"></el-input>
+            <el-input v-model="ruleFormByQuery.phone" placeholder="手机号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmitByQuery">查询</el-button>
@@ -111,13 +111,13 @@ export default {
       console.log('submit!')
     },
     onSubmitByAdd() {
-      var self = this
+       var self = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.loading = true
           addUser(this.ruleForm).then((res) => {
             this.loading = false
-            // self.getDataList()
+            setTimeout(self.getDataList(),2000)
               // this.$router.go({ path: '/studentManagement' })
           }, err => {
             console.log(err)
@@ -130,10 +130,7 @@ export default {
           return false
         }
       })
-      setTimeout(self.getDataList(),5000)
-      setTimeout(console.log("a"),5000)
-
-    },
+      },
     onSubmitByQuery() {
       this.$refs.ruleFormByQuery.validate(valid => {
         if (valid) {

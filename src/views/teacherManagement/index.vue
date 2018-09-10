@@ -8,7 +8,8 @@
         <el-input v-model="ruleForm.phone" placeholder="手机号"></el-input>
       </el-form-item >
       <el-form-item>
-        <el-button type="primary" @click.native.prevent="onSubmitByAdd" @refreshDataList="getDataList">添加</el-button>
+        <el-button type="primary" @click="onSubmitByAdd">添加</el-button>
+        <!--<el-button type="primary" @click.native.prevent="onSubmitByAdd" @refreshDataList="getDataList">添加</el-button>-->
       </el-form-item>
     </el-form>
 
@@ -109,18 +110,19 @@ export default {
       console.log('submit!')
     },
     onSubmitByAdd() {
-      var self  =this
+      var self = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.loading = true
           addUser(this.ruleForm).then((res) => {
             this.loading = false
-            setTimeout(self.getDataList(),3000)
+            setTimeout(self.getDataList(),2000)
             // this.$router.go({ path: '/teacherManagement' })
           }, err => {
             console.log(err)
           }).catch(() => {
             this.loading = false
+
           })
         } else {
           console.log('error submit!!')
@@ -141,7 +143,7 @@ export default {
       this.ruleFormByQuery.phone = ''
       this.getDataList()
     }
-  }
+  },
 }
 </script>
 

@@ -114,6 +114,5 @@ export function deleteCourse(data) {
         })
       })
     })
-  console.log(results)
   })
 }

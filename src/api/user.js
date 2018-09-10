@@ -17,7 +17,6 @@ export function addUser(userInfo) {
     AV.Cloud.run('setRole', options).then(res => {
       console.log(res.status)
       if (res.status === 200) {
-        console.log()
         Message({
           message: '用户添加成功',
           type: 'success',
