@@ -53,7 +53,6 @@ export function addCourse(data) {
 
   const teacher = AV.Object.createWithoutData('_User', data.designatedTeacher.id)
   const student = AV.Object.createWithoutData('_User', data.designatedStudent.id)
-
   course.set('startTime', data.startTime)
   course.set('teacher', teacher)
   course.set('student', student)
@@ -78,41 +77,65 @@ export function addCourse(data) {
     console.log(err)
   })
 }
-export function deleteCourse(data) {
-  const teacher = AV.Object.createWithoutData('_User', data.designatedTeacher.id)
-  const student = AV.Object.createWithoutData('_User', data.designatedStudent.id)
-  var name_Query = new AV.Query('Course');
-  name_Query.equalTo('name', data.name);
-
-  var student_Query = new AV.Query('Course');
-  student_Query.equalTo('student', student);
-
-  var teacher_Query = new AV.Query('Course');
-  teacher_Query.equalTo('teacher', teacher);
-
-  var startTime_Query = new AV.Query('Course');
-  startTime_Query.equalTo('startTime', data.startTime);
-
-  var query = AV.Query.and(name_Query,student_Query,teacher_Query,startTime_Query);
-
+export function deleteCourse(index ,rows) {
+  const query = new AV.Query('Course')
+  query.greaterThanOrEqualTo('duration', 0)
+  query.include('student',"teacher")
   query.find().then(function (results) {
-    results.forEach(function (result) {
-      const id =result.id
-      var todo = AV.Object.createWithoutData('Course', ''+id);
-      todo.destroy().then(function (success) {
-        Message({
-          message: '课程删除成功',
-          type: 'success',
-          duration: 3 * 1000
-        })
-        console.log("删除成功")
-      }, function (error) {
-        Message({
-          message: '课程删除失败',
-          type: 'error',
-          duration: 3 * 1000
-        })
+    const course_id =results[index].id
+    var todo = AV.Object.createWithoutData('Course', ''+course_id);
+    console.log(course_id)
+    todo.destroy().then(function (success) {
+      Message({
+        message: '课程删除成功',
+        type: 'success',
+        duration: 3 * 1000
+      })
+      console.log("删除成功")
+    }, function (error) {
+      Message({
+        message: '课程删除失败',
+        type: 'error',
+        duration: 3 * 1000
       })
     })
   })
 }
+// export function deleteCourse(data) {
+//   const teacher = AV.Object.createWithoutData('_User', data.designatedTeacher.id)
+//   const student = AV.Object.createWithoutData('_User', data.designatedStudent.id)
+//   var name_Query = new AV.Query('Course');
+//   name_Query.equalTo('name', data.name);
+//
+//   var student_Query = new AV.Query('Course');
+//   student_Query.equalTo('student', student);
+//
+//   var teacher_Query = new AV.Query('Course');
+//   teacher_Query.equalTo('teacher', teacher);
+//
+//   var startTime_Query = new AV.Query('Course');
+//   startTime_Query.equalTo('startTime', data.startTime);
+//
+//   var query = AV.Query.and(name_Query,student_Query,teacher_Query,startTime_Query);
+//
+//   query.find().then(function (results) {
+//     results.forEach(function (result) {
+//       const id =result.id
+//       var todo = AV.Object.createWithoutData('Course', ''+id);
+//       todo.destroy().then(function (success) {
+//         Message({
+//           message: '课程删除成功',
+//           type: 'success',
+//           duration: 3 * 1000
+//         })
+//         console.log("删除成功")
+//       }, function (error) {
+//         Message({
+//           message: '课程删除失败',
+//           type: 'error',
+//           duration: 3 * 1000
+//         })
+//       })
+//     })
+//   })
+// }

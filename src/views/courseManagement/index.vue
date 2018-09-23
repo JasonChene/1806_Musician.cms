@@ -59,10 +59,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-button type="primary" @click="addCourse" round>添加该课程</el-button>
-      <el-button type="primary" @click="deleteCourse" round>删除该课程</el-button>
-
     </el-form>
     <el-table
       :data="tableData"
@@ -82,7 +79,7 @@
       <el-table-column
         prop="teacher_number"
         label="老师手机号"
-        width="200">
+        width="180">
       </el-table-column>
       <el-table-column
         prop="student_name"
@@ -92,7 +89,7 @@
       <el-table-column
         prop="student_number"
         label="学生手机号"
-        width="200">
+        width="180">
       </el-table-column>
       <el-table-column
         prop="start_time"
@@ -102,7 +99,15 @@
       <el-table-column
         prop="duration_time"
         label="课程时长"
-        width="200">
+        width="160">
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleDelete(scope.$index, scope.rows)">删除课程</el-button>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -130,6 +135,8 @@
           startTime: '',
           stuPhone: '',
           teaPhone: '',
+          teacher_id: '',
+          student_id: '',
           designatedTeacher: {
             id: '',
             name: '',
@@ -139,7 +146,7 @@
             id: '',
             name: '',
             phone: ''
-          }
+          },
         },
         ruleType: '',
         dataListLoading: false,
@@ -169,6 +176,12 @@
       this.get_course_list_teacher()
     },
     methods: {
+      handleDelete(index, rows) {
+        var self = this
+        deleteCourse(index,rows)
+        // rows.splice(index, 1);
+        setTimeout(self.get_course_list_teacher,1000)
+      },
       onSubmit() {
         console.log('submit!')
       },
@@ -198,6 +211,7 @@
       addCourse() {
         var self = this
         addCourse(this.ruleForm)
+        console.log(this.ruleForm)
         setTimeout(self.get_course_list_teacher,1000)
         // .then(res => {
         //   console.log(res)
@@ -208,44 +222,44 @@
         //   console.log(error)
         // })
       },
-      deleteCourse() {
-        var self = this
-        deleteCourse(this.ruleForm)
-        // .then(res => {
-        //   console.log(res)
-        // }, err => {
-        //   console.log(err)
-        // }).catch(error => {
-        //   console.log(error)
-        // })
-        setTimeout(self.get_course_list_teacher,1000)
-      },
+      // deleteCourse() {
+      //   var self = this
+      //   deleteCourse(this.ruleForm)
+      //   console.log(this.ruleForm)
+      //   // .then(res => {
+      //   //   console.log(res)
+      //   // }, err => {
+      //   //   console.log(err)
+      //   // }).catch(error => {
+      //   //   console.log(error)
+      //   // })
+      //   setTimeout(self.get_course_list_teacher,1000)
+      // },
 
       get_course_list_teacher() {
-        var self=this
+        var self = this
         var course_list = []
         const query = new AV.Query('Course')
         query.greaterThanOrEqualTo('duration', 0)
         query.include('student',"teacher")
         query.find().then(function(results) {
           results.forEach(function(result) {
-            var one_course_info={}
-            one_course_info.course_name=(result._serverData).name
-            one_course_info.duration_time=((result._serverData).duration)/60000+"分钟"
-            one_course_info.start_time= (result._serverData).startTime.toLocaleString()
-            one_course_info.teacher_name=(((result._serverData).teacher).attributes).username
-            one_course_info.teacher_number=(((result._serverData).teacher).attributes).mobilePhoneNumber
-            one_course_info.student_name=(((result._serverData).student).attributes).username
-            one_course_info.student_number=(((result._serverData).student).attributes).mobilePhoneNumber
+            var one_course_info = {}
+            one_course_info.course_name = (result._serverData).name
+            one_course_info.duration_time = ((result._serverData).duration)/60000+"分钟"
+            one_course_info.start_time = (result._serverData).startTime.toLocaleString()
+            one_course_info.teacher_name = (((result._serverData).teacher).attributes).username
+            one_course_info.teacher_number = (((result._serverData).teacher).attributes).mobilePhoneNumber
+            one_course_info.student_name = (((result._serverData).student).attributes).username
+            one_course_info.student_number = (((result._serverData).student).attributes).mobilePhoneNumber
             course_list.push(one_course_info)
           })
-          self.tableData=course_list
+          self.tableData = course_list
           console.log(course_list)
           },
-          function (error) {
+          function(error) {
           })
       }
-
     }
   }
 </script>
